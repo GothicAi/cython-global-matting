@@ -1,3 +1,4 @@
+from setuptools import find_packages
 from distutils.core import setup
 from distutils.extension import Extension
 from Cython.Distutils import build_ext
@@ -5,7 +6,6 @@ from Cython.Build import cythonize
 import numpy
 import sys
 import os
-from setuptools import find_packages
 
 libs = os.popen('ldconfig -p | grep libopencv')
 libs = libs.readlines()
@@ -30,16 +30,17 @@ setup(
     author='Runzhong Wang, Jianhua Sun, Haoshu Fang, Minghao Gou',
     author_email='1751196720@qq.com',
     url='https://github.com/GothicAi/cython-global-matting',
-    packages=find_packages(where='../', exclude=(), include=('*',)),
+    packages=find_packages(),
     cmdclass={'build_ext': build_ext},
     ext_modules=cythonize(Extension("opencv_mat",
-                                    sources=["opencv_mat.pyx", "globalmatting.cpp", "guidedfilter.cpp"],
+                                    sources=["global_matting/opencv_mat.pyx", "global_matting/globalmatting.cpp", "global_matting/guidedfilter.cpp"],
                                     language="c++",
                                     include_dirs=[numpy.get_include(),
                                                   os.path.join('/usr', 'include', 'opencv2'),
                                                  ],
                                     library_dirs=lib_folders,
                                     libraries=cvlibs,
-                                    )
+                                    ),
+                            compiler_directives={'language_level' : "3"}
                           )
 )

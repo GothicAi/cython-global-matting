@@ -1,7 +1,7 @@
 import numpy as np
 cimport numpy as np  # for np.ndarray
 from libc.string cimport memcpy
-from opencv_mat cimport *
+from global_matting.opencv_mat cimport *
 
 # inspired and adapted from http://makerwannabe.blogspot.ch/2013/09/calling-opencv-functions-via-cython.html
 
