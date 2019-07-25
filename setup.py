@@ -30,7 +30,7 @@ setup(
     author='Runzhong Wang, Jianhua Sun, Haoshu Fang, Minghao Gou',
     author_email='1751196720@qq.com',
     url='https://github.com/GothicAi/cython-global-matting',
-    packages=['../global_matting'],
+    packages=find_packages(where='../', exclude=(), include=('*',)),
     cmdclass={'build_ext': build_ext},
     ext_modules=cythonize(Extension("opencv_mat",
                                     sources=["opencv_mat.pyx", "globalmatting.cpp", "guidedfilter.cpp"],
