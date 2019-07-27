@@ -23,7 +23,7 @@ cvlibs = ['-L{}'.format(lib_folder) for lib_folder in lib_folders] + \
          ['opencv_{}'.format(lib.split(os.path.sep)[-1].split('libopencv_')[-1]) for lib in cvlibs]
 
 setup(
-    name='global_matting',
+    name='opencv_mat',
     version='0.1',
     description='A cython interface for paper: A global sampling method for alpha matting',
     author='Runzhong Wang, Jianhua Sun, Haoshu Fang, Minghao Gou',
