@@ -34,7 +34,7 @@ setup(
                                     sources=["opencv_mat.pyx", "globalmatting.cpp", "guidedfilter.cpp"],
                                     language="c++",
                                     include_dirs=[numpy.get_include(),
-                                                  os.path.join('/usr', 'include', 'opencv2'),
+                                                  'opencv2',
                                                  ],
                                     library_dirs=lib_folders,
                                     libraries=cvlibs,
