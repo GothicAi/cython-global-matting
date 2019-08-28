@@ -5,6 +5,8 @@ from Cython.Build import cythonize
 import numpy
 import sys
 import os
+import subprocess
+import sys
 
 libs = os.popen('ldconfig -p | grep libopencv')
 libs = libs.readlines()
@@ -22,6 +24,31 @@ cvlibs = list(set(cvlibs))
 cvlibs = ['-L{}'.format(lib_folder) for lib_folder in lib_folders] + \
          ['opencv_{}'.format(lib.split(os.path.sep)[-1].split('libopencv_')[-1]) for lib in cvlibs]
 
+proc_incs = subprocess.check_output("pkg-config --cflags opencv".split())
+proc_incs = str(proc_incs, 'utf-8').split()
+
+for i in range(len(proc_incs)):
+    proc_incs[i] = proc_incs[i][2:]
+    if proc_incs[i].split('/')[-1] == 'opencv':
+        proc_incs[i] = proc_incs[i][:-7]
+proc_incs = list(set(proc_incs))
+for inc in proc_incs:
+    inc = inc+'/opencv2'
+    if os.path.exists(inc):
+        break
+
+py_path = os.path.join(sys.prefix, 'include', 'opencv2')
+default_path = os.path.join('/usr/include/opencv2')
+pthlist = []
+if os.path.exists(inc):
+    pthlist.append(inc)
+if os.path.exists(py_path):
+    pthlist.append(py_path)
+if os.path.exists(default_path):
+    pthlist.append(default_path)
+
+assert pthlist, 'Not find opencv.hpp.'
+
 setup(
     name='opencv_mat',
     version='0.1',
@@ -34,7 +61,7 @@ setup(
                                     sources=["opencv_mat.pyx", "globalmatting.cpp", "guidedfilter.cpp"],
                                     language="c++",
                                     include_dirs=[numpy.get_include(),
-                                                  os.path.join('/usr', 'include', 'opencv2'),
+                                                  pthlist[0]
                                                  ],
                                     library_dirs=lib_folders,
                                     libraries=cvlibs,
