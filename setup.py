@@ -8,46 +8,28 @@ import os
 import subprocess
 import sys
 
-libs = os.popen('ldconfig -p | grep libopencv')
-libs = libs.readlines()
-lib_paths = [l.split('=>')[-1].strip('\n').strip(' ') for l in libs]
+lib_folders = ['lib']
 
-# Find opencv libraries in lib_folder
-cvlibs = list()
-lib_folders = set()
-for file in lib_paths:
-    file_split = file.split('.')
-    cvlibs.append(file_split[0])
-    lib_folders.add(file.split('libopencv')[0])
-lib_folders = list(lib_folders)
-cvlibs = list(set(cvlibs))
-cvlibs = ['-L{}'.format(lib_folder) for lib_folder in lib_folders] + \
-         ['opencv_{}'.format(lib.split(os.path.sep)[-1].split('libopencv_')[-1]) for lib in cvlibs]
-
-proc_incs = subprocess.check_output("pkg-config --cflags opencv".split())
-proc_incs = str(proc_incs, 'utf-8').split()
-
-for i in range(len(proc_incs)):
-    proc_incs[i] = proc_incs[i][2:]
-    if proc_incs[i].split('/')[-1] == 'opencv':
-        proc_incs[i] = proc_incs[i][:-7]
-proc_incs = list(set(proc_incs))
-for inc in proc_incs:
-    inc = inc+'/opencv2'
-    if os.path.exists(inc):
-        break
-
-py_path = os.path.join(sys.prefix, 'include', 'opencv2')
-default_path = os.path.join('/usr/include/opencv2')
-pthlist = []
-if os.path.exists(inc):
-    pthlist.append(inc)
-if os.path.exists(py_path):
-    pthlist.append(py_path)
-if os.path.exists(default_path):
-    pthlist.append(default_path)
-
-assert pthlist, 'Not find opencv.hpp.'
+cvlibs = ['opencv_gpu', 'opencv_xobjdetect', 'opencv_aruco', 'opencv_cudabgsegm', 'opencv_xfeatures2d', \
+    'opencv_ccalib', 'opencv_cudafilters', 'opencv_cudafilters', 'opencv_cvv', 'opencv_cudev', 'opencv_saliency', \
+    'opencv_imgproc', 'opencv_saliency', 'opencv_ml', 'opencv_ml', 'opencv_cvv', 'opencv_cudev', 'opencv_photo', \
+    'opencv_bgsegm', 'opencv_rgbd', 'opencv_calib3d', 'opencv_bioinspired', 'opencv_videostab', 'opencv_structured_light', \
+    'opencv_optflow', 'opencv_cudalegacy', 'opencv_fuzzy', 'opencv_cudaoptflow', 'opencv_datasets', 'opencv_contrib', \
+    'opencv_reg', 'opencv_face', 'opencv_viz', 'opencv_ml', 'opencv_highgui', 'opencv_cudaarithm', 'opencv_xobjdetect', \
+    'opencv_cudawarping', 'opencv_rgbd', 'opencv_xphoto', 'opencv_dnn', 'opencv_optflow', 'opencv_flann', 'opencv_freetype', \
+    'opencv_imgproc', 'opencv_nonfree', 'opencv_gpu', 'opencv_calib3d', 'opencv_xfeatures2d', 'opencv_flann', 'opencv_reg', \
+    'opencv_surface_matching', 'opencv_freetype', 'opencv_ximgproc', 'opencv_objdetect', 'opencv_surface_matching', 'opencv_photo', \
+    'opencv_tracking', 'opencv_imgcodecs', 'opencv_core', 'opencv_videoio', 'opencv_flann', 'opencv_calib3d', 'opencv_face', \
+    'opencv_aruco', 'opencv_video', 'opencv_cudaimgproc', 'opencv_stereo', 'opencv_plot', 'opencv_cudafeatures2d', 'opencv_features2d', \
+    'opencv_shape', 'opencv_hdf', 'opencv_stereo', 'opencv_cudastereo', 'opencv_cudacodec', 'opencv_cudaimgproc', 'opencv_cudaarithm', \
+    'opencv_datasets', 'opencv_cudalegacy', 'opencv_ocl', 'opencv_ximgproc', 'opencv_superres', 'opencv_hdf', 'opencv_legacy', 'opencv_ccalib', \
+    'opencv_shape', 'opencv_dpm', 'opencv_videoio', 'opencv_cudawarping', 'opencv_video', 'opencv_superres', 'opencv_legacy', 'opencv_imgproc', \
+    'opencv_cudaoptflow', 'opencv_cudabgsegm', 'opencv_core', 'opencv_stitching', 'opencv_fuzzy', 'opencv_features2d', 'opencv_highgui', 'opencv_core', \
+    'opencv_objdetect', 'opencv_bgsegm', 'opencv_viz', 'opencv_contrib', 'opencv_xphoto', 'opencv_cudastereo', 'opencv_highgui', 'opencv_cudaobjdetect', \
+    'opencv_videostab', 'opencv_stitching', 'opencv_text', 'opencv_cudacodec', 'opencv_ocl', 'opencv_cudafeatures2d', 'opencv_superres', 'opencv_dnn', \
+    'opencv_nonfree', 'opencv_cudaobjdetect', 'opencv_objdetect', 'opencv_stitching', 'opencv_phase_unwrapping', 'opencv_dpm', 'opencv_imgcodecs', \
+    'opencv_videostab', 'opencv_structured_light', 'opencv_bioinspired', 'opencv_phase_unwrapping', 'opencv_line_descriptor', 'opencv_features2d', \
+    'opencv_tracking', 'opencv_line_descriptor', 'opencv_photo', 'opencv_text', 'opencv_plot', 'opencv_video', 'opencv_ts']
 
 setup(
     name='opencv_mat',
@@ -61,7 +43,7 @@ setup(
                                     sources=["opencv_mat.pyx", "globalmatting.cpp", "guidedfilter.cpp"],
                                     language="c++",
                                     include_dirs=[numpy.get_include(),
-                                                  pthlist[0]
+                                                  'opencv2'
                                                  ],
                                     library_dirs=lib_folders,
                                     libraries=cvlibs,
