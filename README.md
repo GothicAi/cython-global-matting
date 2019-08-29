@@ -26,9 +26,10 @@ If users only use OpenCV (C++ Version) for this package, we highly recommand usi
 
 After installing Conda, users may easily following commands below to install this package. 
 ```
-conda create -n name_of_your_environmnet -python=3.x
-conda install opencv
-pip install cython, numpy
+conda create -n environmnet_name -python=3.x
+conda activate environmnet_name
+conda install -c salilab opencv-nopython        # opencv2
+pip install cython numpy
 pip install opencv-mat
 ```
 
@@ -37,19 +38,21 @@ pip install opencv-mat
 If users may want to use OpenCV (C++ Version) for any other purpose, we also give an instruction here to help install OpenCV in Ubuntu 16.04. (Other Linux systems may be similar)
 
 ```
-sudo apt-get install cmake build-essential      # install compile tools
-sudo apt-get install libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev     # install dependency packages
-sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev       # install optional dependency packages
+sudo apt-get install cmake build-essential                                     # install compile tools
+sudo apt-get install libgtk2.0-dev pkg-config \
+    libavcodec-dev libavformat-dev libswscale-dev                              # install dependency packages
+sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev \
+    libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev                      # install optional dependency packages
 
-wget https://github.com/opencv/opencv/archive/2.4.13.6.zip      # download opencv source code, other versions are in https://opencv.org/releases/
+wget https://github.com/opencv/opencv/archive/2.4.13.6.zip                     # download opencv source code, other versions are in https://opencv.org/releases/
 unzip opencv-2.4.13.zip
 cd opencv-2.4.13
 mkdir release
 cd release
 
 cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local ..     
-make -j4        # -j4 means jobs=4, users can set jobs according to cpu threads
-sudo make install       # install opencv in your computer, whether `sudo` is needed depends on CMAKE_INSTALL_PREFIX
+make -j4                                                                       # -j4 means jobs=4, users can set jobs according to cpu threads
+sudo make install                                                              # install opencv in your computer, whether `sudo` is needed depends on CMAKE_INSTALL_PREFIX
 ```
 
 Here, `CMAKE_INSTALL_PREFIX` can be set to other paths. However, we recommand `/usr/local` or `/usr` since our code and may other projects use this path as default. 
@@ -82,3 +85,11 @@ After that, users can install our package using
 ```
 pip install opencv-mat
 ```
+
+## Tested Environments
+
+|  Pass  |     Linux     |  python  |  opencv  |
+|  ----  |     -----     |  ------  |  ------  |
+|    √   |  Ubuntu16.04  |   3.5    |   2.4    |
+|    √   |  Ubuntu16.04  |   3.6    |   2.4    |
+|    ×   |  Ubuntu16.04  |    *     |   3.x    |
