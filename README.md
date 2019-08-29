@@ -16,6 +16,69 @@ When building is complete, test the algorithm via `python3 test.py`.
 
 You should see a `GT04-alpha.png` with good matting result.
 
-## Notes
+## Environment Settings (Linux)
 
-The code was built and tested on Ubuntu 14.04, with Python 3.4 and OpenCV 2.4. But it should work with other Python and  OpenCV versions.
+To build this code, OpenCV (C++ version) is needed. If user has been installed OpenCV before, it is OK to follow instructions in [bulid](#build) or simply use `pip install opencv-mat`. Otherwise, user should install OpenCV. We show how to install OpenCV in [Conda](#Conda-(Recommand)) (*Recommand*) or in [System](#System) below. 
+
+### Conda (Recommand)
+
+If users only use OpenCV (C++ Version) for this package, we highly recommand using conda environment. To install Conda, users may search in this [website](https://www.anaconda.com/) or other versions of conda. Here is an [instruction](https://problemsolvingwithpython.com/01-Orientation/01.05-Installing-Anaconda-on-Linux/).
+
+After installing Conda, users may easily following commands below to install this package. 
+```
+conda create -n name_of_your_environmnet -python=3.x
+conda install opencv
+pip install cython, numpy
+pip install opencv-mat
+```
+
+### System
+
+If users may want to use OpenCV (C++ Version) for any other purpose, we also give an instruction here to help install OpenCV in Ubuntu 16.04. (Other Linux systems may be similar)
+
+```
+sudo apt-get install cmake build-essential      # install compile tools
+sudo apt-get install libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev     # install dependency packages
+sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev       # install optional dependency packages
+
+wget https://github.com/opencv/opencv/archive/2.4.13.6.zip      # download opencv source code, other versions are in https://opencv.org/releases/
+unzip opencv-2.4.13.zip
+cd opencv-2.4.13
+mkdir release
+cd release
+
+cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local ..     
+make -j4        # -j4 means jobs=4, users can set jobs according to cpu threads
+sudo make install       # install opencv in your computer, whether `sudo` is needed depends on CMAKE_INSTALL_PREFIX
+```
+
+Here, `CMAKE_INSTALL_PREFIX` can be set to other paths. However, we recommand `/usr/local` or `/usr` since our code and may other projects use this path as default. 
+
+After installing OpenCV, users need to setup PATH. 
+
+First, run `sudo vim /etc/ld.so.conf.d/opencv.conf`, add `CMAKE_INSTALL_PREFIX/lib` (e.g. `/usr/lib`) in this file and save, then run `sudo ldconfig` to activate. 
+
+Second, run `sudo vim /etc/bash.bashrc`, add this in the end of the file and save.
+```
+PKG_CONFIG_PATH=$PKG_CONFIG_PATH:CMAKE_INSTALL_PREFIX/lib/pkgconfig
+export PKG_CONFIG_PATH
+```
+
+Finally, run 
+```
+su      # input password
+source /etc/bash.bashrc
+exit
+sudo updatedb
+```
+
+Users can check using these commands. 
+```
+ldconfig -p | grep libopencv
+pkg-config --cflags opencv
+```
+
+After that, users can install our package using
+```
+pip install opencv-mat
+```
