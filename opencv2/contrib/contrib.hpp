@@ -664,7 +664,6 @@ namespace cv
         *\param center the transformation center: where the output precision is maximal
         *\param R the number of rings of the cortical image (default value 70 pixel)
         *\param ro0 the radius of the blind spot (default value 3 pixel)
-        *\param interp interpolation algorithm
         *\param full \a 1 (default value) means that the retinal image (the inverse transform) is computed within the circumscribing circle.
         *            \a 0 means that the retinal image is computed within the inscribed circle.
         *\param S the number of sectors of the cortical image (default value 70 pixel).
@@ -853,7 +852,8 @@ namespace cv
     class CV_EXPORTS LDA
     {
     public:
-        // Initializes a LDA with num_components (default 0).
+        // Initializes a LDA with num_components (default 0) and specifies how
+        // samples are aligned (default dataAsRow=true).
         LDA(int num_components = 0) :
             _num_components(num_components) {};
 
@@ -894,18 +894,13 @@ namespace cv
         // Destructor.
         ~LDA() {}
 
-        /** Compute the discriminants for data in src (row aligned) and labels.
-          */
+        //! Compute the discriminants for data in src and labels.
         void compute(InputArrayOfArrays src, InputArray labels);
 
-        /** Projects samples into the LDA subspace.
-            src may be one or more row aligned samples.
-          */
+        // Projects samples into the LDA subspace.
         Mat project(InputArray src);
 
-        /** Reconstructs projections from the LDA subspace.
-            src may be one or more row aligned projections.
-          */
+        // Reconstructs projections from the LDA subspace.
         Mat reconstruct(InputArray src);
 
         // Returns the eigenvectors of this LDA.
@@ -915,7 +910,7 @@ namespace cv
         Mat eigenvalues() const { return _eigenvalues; }
 
     protected:
-        bool _dataAsRow; // unused, but needed for ABI compatibility.
+        bool _dataAsRow;
         int _num_components;
         Mat _eigenvectors;
         Mat _eigenvalues;
@@ -953,14 +948,6 @@ namespace cv
         // Deserializes this object from a given cv::FileStorage.
         virtual void load(const FileStorage& fs) = 0;
 
-        // Sets additional information as pairs label - info.
-        void setLabelsInfo(const std::map<int, string>& labelsInfo);
-
-        // Gets string information by label
-        string getLabelInfo(const int &label);
-
-        // Gets labels by string
-        vector<int> getLabelsByString(const string& str);
     };
 
     CV_EXPORTS_W Ptr<FaceRecognizer> createEigenFaceRecognizer(int num_components = 0, double threshold = DBL_MAX);

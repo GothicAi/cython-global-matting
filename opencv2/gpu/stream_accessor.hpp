@@ -57,7 +57,6 @@ namespace cv
         struct StreamAccessor
         {
             CV_EXPORTS static cudaStream_t getStream(const Stream& stream);
-            CV_EXPORTS static Stream wrapStream(cudaStream_t stream);
         };
     }
 }

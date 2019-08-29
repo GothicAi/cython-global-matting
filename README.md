@@ -26,8 +26,8 @@ If users only use OpenCV (C++ Version) for this package, we highly recommand usi
 
 After installing Conda, users may easily following commands below to install this package. 
 ```
-conda create -n name_of_your_environmnet python=3.x
-conda install opencv 
+conda create -n name_of_your_environmnet -python=3.x
+conda install -c menpo opencv 
 pip install cython, numpy
 pip install opencv-mat
 ```
@@ -82,6 +82,3 @@ After that, users can install our package using
 ```
 pip install opencv-mat
 ```
-
-## Tested Environmnet
-

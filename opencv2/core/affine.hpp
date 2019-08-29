@@ -48,8 +48,6 @@
 
 #include <opencv2/core/core.hpp>
 
-/*! @file */
-
 namespace cv
 {
     template<typename T>
@@ -203,13 +201,11 @@ cv::Affine3<T>::Affine3(const cv::Mat& data, const Vec3& t)
     {
         rotation(data(Rect(0, 0, 3, 3)));
         translation(data(Rect(3, 0, 1, 3)));
-    }
-    else
-    {
-        rotation(data);
-        translation(t);
+        return;
     }
 
+    rotation(data);
+    translation(t);
     matrix.val[12] = matrix.val[13] = matrix.val[14] = 0;
     matrix.val[15] = 1;
 }
@@ -245,7 +241,7 @@ void cv::Affine3<T>::rotation(const Vec3& _rvec)
         double c = std::cos(theta);
         double s = std::sin(theta);
         double c1 = 1. - c;
-        double itheta = (theta != 0) ? 1./theta : 0.;
+        double itheta = theta ? 1./theta : 0.;
 
         rx *= itheta; ry *= itheta; rz *= itheta;
 
@@ -433,7 +429,6 @@ cv::Affine3<Y> cv::Affine3<T>::cast() const
     return Affine3<Y>(matrix);
 }
 
-/** @cond IGNORED */
 template<typename T> inline
 cv::Affine3<T> cv::operator*(const cv::Affine3<T>& affine1, const cv::Affine3<T>& affine2)
 {
@@ -451,7 +446,6 @@ V cv::operator*(const cv::Affine3<T>& affine, const V& v)
     r.z = m.val[8] * v.x + m.val[9] * v.y + m.val[10] * v.z + m.val[11];
     return r;
 }
-/** @endcond */
 
 static inline
 cv::Vec3f cv::operator*(const cv::Affine3f& affine, const cv::Vec3f& v)

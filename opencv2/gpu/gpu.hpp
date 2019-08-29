@@ -54,12 +54,6 @@
 #include "opencv2/objdetect/objdetect.hpp"
 #include "opencv2/features2d/features2d.hpp"
 
-// std::auto_ptr
-#if defined(__GNUC__) && __GNUC__ >= 6
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
-
 namespace cv { namespace gpu {
 
 //////////////////////////////// CudaMem ////////////////////////////////
@@ -131,7 +125,7 @@ public:
     size_t step;
 
     uchar* data;
-    int* refcount;
+    _Atomic_word* refcount;
 
     uchar* datastart;
     uchar* dataend;
@@ -435,13 +429,13 @@ CV_EXPORTS void LUT(const GpuMat& src, const Mat& lut, GpuMat& dst, Stream& stre
 CV_EXPORTS void merge(const GpuMat* src, size_t n, GpuMat& dst, Stream& stream = Stream::Null());
 
 //! makes multi-channel array out of several single-channel arrays
-CV_EXPORTS void merge(const std::vector<GpuMat>& src, GpuMat& dst, Stream& stream = Stream::Null());
+CV_EXPORTS void merge(const vector<GpuMat>& src, GpuMat& dst, Stream& stream = Stream::Null());
 
 //! copies each plane of a multi-channel array to a dedicated array
 CV_EXPORTS void split(const GpuMat& src, GpuMat* dst, Stream& stream = Stream::Null());
 
 //! copies each plane of a multi-channel array to a dedicated array
-CV_EXPORTS void split(const GpuMat& src, std::vector<GpuMat>& dst, Stream& stream = Stream::Null());
+CV_EXPORTS void split(const GpuMat& src, vector<GpuMat>& dst, Stream& stream = Stream::Null());
 
 //! computes magnitude of complex (x(i).re, x(i).im) vector
 //! supports only CV_32FC2 type
@@ -543,7 +537,7 @@ CV_EXPORTS void log(const GpuMat& a, GpuMat& b, Stream& stream = Stream::Null())
 //! supports all, except depth == CV_64F
 CV_EXPORTS void pow(const GpuMat& src, double power, GpuMat& dst, Stream& stream = Stream::Null());
 
-//! compares elements of two arrays (c = a \<cmpop\> b)
+//! compares elements of two arrays (c = a <cmpop> b)
 CV_EXPORTS void compare(const GpuMat& a, const GpuMat& b, GpuMat& c, int cmpop, Stream& stream = Stream::Null());
 CV_EXPORTS void compare(const GpuMat& a, Scalar sc, GpuMat& c, int cmpop, Stream& stream = Stream::Null());
 
@@ -1268,9 +1262,9 @@ private:
 struct CV_EXPORTS HOGConfidence
 {
    double scale;
-   std::vector<Point> locations;
-   std::vector<double> confidences;
-   std::vector<double> part_scores[4];
+   vector<Point> locations;
+   vector<double> confidences;
+   vector<double> part_scores[4];
 };
 
 struct CV_EXPORTS HOGDescriptor
@@ -1288,27 +1282,27 @@ struct CV_EXPORTS HOGDescriptor
     size_t getDescriptorSize() const;
     size_t getBlockHistogramSize() const;
 
-    void setSVMDetector(const std::vector<float>& detector);
+    void setSVMDetector(const vector<float>& detector);
 
-    static std::vector<float> getDefaultPeopleDetector();
-    static std::vector<float> getPeopleDetector48x96();
-    static std::vector<float> getPeopleDetector64x128();
+    static vector<float> getDefaultPeopleDetector();
+    static vector<float> getPeopleDetector48x96();
+    static vector<float> getPeopleDetector64x128();
 
-    void detect(const GpuMat& img, std::vector<Point>& found_locations,
+    void detect(const GpuMat& img, vector<Point>& found_locations,
                 double hit_threshold=0, Size win_stride=Size(),
                 Size padding=Size());
 
-    void detectMultiScale(const GpuMat& img, std::vector<Rect>& found_locations,
+    void detectMultiScale(const GpuMat& img, vector<Rect>& found_locations,
                           double hit_threshold=0, Size win_stride=Size(),
                           Size padding=Size(), double scale0=1.05,
                           int group_threshold=2);
 
-    void computeConfidence(const GpuMat& img, std::vector<Point>& hits, double hit_threshold,
-                                                Size win_stride, Size padding, std::vector<Point>& locations, std::vector<double>& confidences);
+    void computeConfidence(const GpuMat& img, vector<Point>& hits, double hit_threshold,
+                                                Size win_stride, Size padding, vector<Point>& locations, vector<double>& confidences);
 
-    void computeConfidenceMultiScale(const GpuMat& img, std::vector<Rect>& found_locations,
+    void computeConfidenceMultiScale(const GpuMat& img, vector<Rect>& found_locations,
                                                                     double hit_threshold, Size win_stride, Size padding,
-                                                                    std::vector<HOGConfidence> &conf_out, int group_threshold);
+                                                                    vector<HOGConfidence> &conf_out, int group_threshold);
 
     void getDescriptors(const GpuMat& img, Size win_stride,
                         GpuMat& descriptors,
@@ -1838,11 +1832,11 @@ public:
 
 private:
     GpuMat uPyr_[2];
-    std::vector<GpuMat> prevPyr_;
-    std::vector<GpuMat> nextPyr_;
+    vector<GpuMat> prevPyr_;
+    vector<GpuMat> nextPyr_;
     GpuMat vPyr_[2];
-    std::vector<GpuMat> buf_;
-    std::vector<GpuMat> unused;
+    vector<GpuMat> buf_;
+    vector<GpuMat> unused;
     bool isDeviceArch11_;
 };
 
@@ -2270,7 +2264,6 @@ public:
      * model.
      * @param frame        Input frame
      * @param fgmask       Output mask image representing foreground and background pixels
-     * @param learningRate determines how quickly features are “forgotten” from histograms
      * @param stream       Stream for the asynchronous version
      */
     void operator ()(const GpuMat& frame, GpuMat& fgmask, float learningRate = -1.0f, Stream& stream = Stream::Null());
@@ -2532,9 +2525,5 @@ CV_EXPORTS void calcWobbleSuppressionMaps(
 } // namespace gpu
 
 } // namespace cv
-
-#if defined(__GNUC__) && __GNUC__ >= 6
-#pragma GCC diagnostic pop
-#endif
 
 #endif /* __OPENCV_GPU_HPP__ */

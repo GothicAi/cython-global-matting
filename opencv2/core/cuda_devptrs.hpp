@@ -122,23 +122,27 @@ namespace cv
         typedef PtrStep<float> PtrStepf;
         typedef PtrStep<int> PtrStepi;
 
+
 #if defined __GNUC__
-    #define CV_GPU_DEPRECATED __attribute__ ((deprecated))
+    #define __CV_GPU_DEPR_BEFORE__
+    #define __CV_GPU_DEPR_AFTER__ __attribute__ ((deprecated))
 #elif defined(__MSVC__) //|| defined(__CUDACC__)
     #pragma deprecated(DevMem2D_)
-    #define CV_GPU_DEPRECATED __declspec(deprecated)
+    #define __CV_GPU_DEPR_BEFORE__ __declspec(deprecated)
+    #define __CV_GPU_DEPR_AFTER__
 #else
-    #define CV_GPU_DEPRECATED
+    #define __CV_GPU_DEPR_BEFORE__
+    #define __CV_GPU_DEPR_AFTER__
 #endif
 
-        template <typename T> struct DevMem2D_ : public PtrStepSz<T>
+        template <typename T> struct __CV_GPU_DEPR_BEFORE__ DevMem2D_ : public PtrStepSz<T>
         {
-            CV_GPU_DEPRECATED DevMem2D_() {}
-            CV_GPU_DEPRECATED DevMem2D_(int rows_, int cols_, T* data_, size_t step_) : PtrStepSz<T>(rows_, cols_, data_, step_) {}
+            DevMem2D_() {}
+            DevMem2D_(int rows_, int cols_, T* data_, size_t step_) : PtrStepSz<T>(rows_, cols_, data_, step_) {}
 
             template <typename U>
-            explicit CV_GPU_DEPRECATED DevMem2D_(const DevMem2D_<U>& d) : PtrStepSz<T>(d.rows, d.cols, (T*)d.data, d.step) {}
-        };
+            explicit __CV_GPU_DEPR_BEFORE__ DevMem2D_(const DevMem2D_<U>& d) : PtrStepSz<T>(d.rows, d.cols, (T*)d.data, d.step) {}
+        } __CV_GPU_DEPR_AFTER__ ;
 
         typedef DevMem2D_<unsigned char> DevMem2Db;
         typedef DevMem2Db DevMem2D;
@@ -170,7 +174,8 @@ namespace cv
         typedef PtrElemStep_<float> PtrElemStepf;
         typedef PtrElemStep_<int> PtrElemStepi;
 
-//#undef CV_GPU_DEPRECATED
+//#undef __CV_GPU_DEPR_BEFORE__
+//#undef __CV_GPU_DEPR_AFTER__
 
         namespace device
         {

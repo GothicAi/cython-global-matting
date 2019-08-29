@@ -277,9 +277,10 @@ namespace cv { namespace gpu
         template <typename _Tp> operator PtrStep<_Tp>() const;
 
         // Deprecated function
-        template <typename _Tp> CV_GPU_DEPRECATED operator DevMem2D_<_Tp>() const;
-        template <typename _Tp> CV_GPU_DEPRECATED operator PtrStep_<_Tp>() const;
-        #undef CV_GPU_DEPRECATED
+        __CV_GPU_DEPR_BEFORE__ template <typename _Tp> operator DevMem2D_<_Tp>() const __CV_GPU_DEPR_AFTER__;
+        __CV_GPU_DEPR_BEFORE__ template <typename _Tp> operator PtrStep_<_Tp>() const __CV_GPU_DEPR_AFTER__;
+        #undef __CV_GPU_DEPR_BEFORE__
+        #undef __CV_GPU_DEPR_AFTER__
 
         /*! includes several bit-fields:
         - the magic signature
@@ -300,7 +301,7 @@ namespace cv { namespace gpu
 
         //! pointer to the reference counter;
         // when GpuMatrix points to user-allocated data, the pointer is NULL
-        int* refcount;
+        _Atomic_word* refcount;
 
         //! helper fields used in locateROI and adjustROI
         uchar* datastart;
@@ -511,7 +512,6 @@ namespace cv { namespace gpu
         return *this;
     }
 
-    /** @cond IGNORED */
     template <class T> inline GpuMat::operator PtrStepSz<T>() const
     {
         return PtrStepSz<T>(rows, cols, (T*)data, step);
@@ -531,7 +531,6 @@ namespace cv { namespace gpu
     {
         return PtrStep_<T>(static_cast< DevMem2D_<T> >(*this));
     }
-    /** @endcond */
 
     inline GpuMat createContinuous(int rows, int cols, int type)
     {
