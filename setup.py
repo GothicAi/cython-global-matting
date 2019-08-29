@@ -25,7 +25,7 @@ cvlibs = ['-L{}'.format(lib_folder)] + \
 conda_path = os.path.join(sys.prefix, 'include', 'opencv2')
 if os.path.exists(conda_path):
     pthlist.append(conda_path)
-
+lib_folders = [lib_folder]
 
 if not pthlist:
     # search in system folder
