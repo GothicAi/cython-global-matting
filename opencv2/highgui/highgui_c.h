@@ -158,6 +158,7 @@ CVAPI(int) cvCreateTrackbar2( const char* trackbar_name, const char* window_name
 /* retrieve or set trackbar position */
 CVAPI(int) cvGetTrackbarPos( const char* trackbar_name, const char* window_name );
 CVAPI(void) cvSetTrackbarPos( const char* trackbar_name, const char* window_name, int pos );
+CVAPI(void) cvSetTrackbarMax(const char* trackbar_name, const char* window_name, int maxval);
 
 enum
 {
@@ -362,7 +363,7 @@ enum
     CV_CAP_PROP_GAIN          =14,
     CV_CAP_PROP_EXPOSURE      =15,
     CV_CAP_PROP_CONVERT_RGB   =16,
-    CV_CAP_PROP_WHITE_BALANCE_BLUE_U =17,
+    CV_CAP_PROP_WHITE_BALANCE_U =17,
     CV_CAP_PROP_RECTIFICATION =18,
     CV_CAP_PROP_MONOCROME     =19,
     CV_CAP_PROP_SHARPNESS     =20,
@@ -373,7 +374,7 @@ enum
     CV_CAP_PROP_TEMPERATURE   =23,
     CV_CAP_PROP_TRIGGER       =24,
     CV_CAP_PROP_TRIGGER_DELAY =25,
-    CV_CAP_PROP_WHITE_BALANCE_RED_V =26,
+    CV_CAP_PROP_WHITE_BALANCE_V =26,
     CV_CAP_PROP_ZOOM          =27,
     CV_CAP_PROP_FOCUS         =28,
     CV_CAP_PROP_GUID          =29,
@@ -385,6 +386,7 @@ enum
     CV_CAP_PROP_ROLL          =35,
     CV_CAP_PROP_IRIS          =36,
     CV_CAP_PROP_SETTINGS      =37,
+    CV_CAP_PROP_BUFFERSIZE    =38,
 
     CV_CAP_PROP_AUTOGRAB      =1024, // property for highgui class CvCapture_Android only
     CV_CAP_PROP_SUPPORTED_PREVIEW_SIZES_STRING=1025, // readonly, tricky property, returns cpnst char* indeed
@@ -420,7 +422,15 @@ enum
 
     // Properties of cameras available through GStreamer interface
     CV_CAP_GSTREAMER_QUEUE_LENGTH   = 200, // default is 1
-    CV_CAP_PROP_PVAPI_MULTICASTIP   = 300, // ip for anable multicast master mode. 0 for disable multicast
+
+    // PVAPI
+    CV_CAP_PROP_PVAPI_MULTICASTIP           = 300, // ip for anable multicast master mode. 0 for disable multicast
+    CV_CAP_PROP_PVAPI_FRAMESTARTTRIGGERMODE = 301, // FrameStartTriggerMode: Determines how a frame is initiated
+    CV_CAP_PROP_PVAPI_DECIMATIONHORIZONTAL  = 302, // Horizontal sub-sampling of the image
+    CV_CAP_PROP_PVAPI_DECIMATIONVERTICAL    = 303, // Vertical sub-sampling of the image
+    CV_CAP_PROP_PVAPI_BINNINGX              = 304, // Horizontal binning factor
+    CV_CAP_PROP_PVAPI_BINNINGY              = 305, // Vertical binning factor
+    CV_CAP_PROP_PVAPI_PIXELFORMAT           = 306, // Pixel format
 
     // Properties of cameras available through XIMEA SDK interface
     CV_CAP_PROP_XI_DOWNSAMPLING  = 400,      // Change image resolution by binning or skipping.

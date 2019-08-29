@@ -211,6 +211,7 @@ public:
 
         for (int i = 0; i < n; i++) {
             closestDistSq[i] = distance_(dataset_[indices[i]], dataset_[indices[index]], dataset_.cols);
+            closestDistSq[i] = ensureSquareDistance<Distance>( closestDistSq[i] );
             currentPot += closestDistSq[i];
         }
 
@@ -236,7 +237,10 @@ public:
 
                 // Compute the new potential
                 double newPot = 0;
-                for (int i = 0; i < n; i++) newPot += std::min( distance_(dataset_[indices[i]], dataset_[indices[index]], dataset_.cols), closestDistSq[i] );
+                for (int i = 0; i < n; i++) {
+                    DistanceType dist = distance_(dataset_[indices[i]], dataset_[indices[index]], dataset_.cols);
+                    newPot += std::min( ensureSquareDistance<Distance>(dist), closestDistSq[i] );
+                }
 
                 // Store the best result
                 if ((bestNewPot < 0)||(newPot < bestNewPot)) {
@@ -248,7 +252,10 @@ public:
             // Add the appropriate center
             centers[centerCount] = indices[bestNewIndex];
             currentPot = bestNewPot;
-            for (int i = 0; i < n; i++) closestDistSq[i] = std::min( distance_(dataset_[indices[i]], dataset_[indices[bestNewIndex]], dataset_.cols), closestDistSq[i] );
+            for (int i = 0; i < n; i++) {
+                DistanceType dist = distance_(dataset_[indices[i]], dataset_[indices[bestNewIndex]], dataset_.cols);
+                closestDistSq[i] = std::min( ensureSquareDistance<Distance>(dist), closestDistSq[i] );
+            }
         }
 
         centers_length = centerCount;
@@ -356,6 +363,13 @@ public:
     }
 
     /**
+     * Dummy implementation for other algorithms of addable indexes after that.
+     */
+    void addIndex(const Matrix<ElementType>& /*wholeData*/, const Matrix<ElementType>& /*additionalData*/)
+    {
+    }
+
+    /**
      * Builds the index
      */
     void buildIndex()
@@ -370,6 +384,8 @@ public:
         }
 
         root_ = pool_.allocate<KMeansNode>();
+        std::memset(root_, 0, sizeof(KMeansNode));
+
         computeNodeStatistics(root_, indices_, (int)size_);
         computeClustering(root_, indices_, (int)size_, branching_,0);
     }
@@ -809,11 +825,11 @@ private:
             variance -= distance_(centers[c], ZeroIterator<ElementType>(), veclen_);
 
             node->childs[c] = pool_.allocate<KMeansNode>();
+            std::memset(node->childs[c], 0, sizeof(KMeansNode));
             node->childs[c]->radius = radiuses[c];
             node->childs[c]->pivot = centers[c];
             node->childs[c]->variance = variance;
             node->childs[c]->mean_radius = mean_radius;
-            node->childs[c]->indices = NULL;
             computeClustering(node->childs[c],indices+start, end-start, branching, level+1);
             start=end;
         }

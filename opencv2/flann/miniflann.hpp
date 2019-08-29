@@ -91,13 +91,13 @@ struct CV_EXPORTS LinearIndexParams : public IndexParams
 struct CV_EXPORTS CompositeIndexParams : public IndexParams
 {
     CompositeIndexParams(int trees = 4, int branching = 32, int iterations = 11,
-                         cvflann::flann_centers_init_t centers_init = cvflann::FLANN_CENTERS_RANDOM, float cb_index = 0.2 );
+                         cvflann::flann_centers_init_t centers_init = cvflann::FLANN_CENTERS_RANDOM, float cb_index = 0.2f );
 };
 
 struct CV_EXPORTS AutotunedIndexParams : public IndexParams
 {
-    AutotunedIndexParams(float target_precision = 0.8, float build_weight = 0.01,
-                         float memory_weight = 0, float sample_fraction = 0.1);
+    AutotunedIndexParams(float target_precision = 0.8f, float build_weight = 0.01f,
+                         float memory_weight = 0, float sample_fraction = 0.1f);
 };
 
 struct CV_EXPORTS HierarchicalClusteringIndexParams : public IndexParams
@@ -109,7 +109,7 @@ struct CV_EXPORTS HierarchicalClusteringIndexParams : public IndexParams
 struct CV_EXPORTS KMeansIndexParams : public IndexParams
 {
     KMeansIndexParams(int branching = 32, int iterations = 11,
-                      cvflann::flann_centers_init_t centers_init = cvflann::FLANN_CENTERS_RANDOM, float cb_index = 0.2 );
+                      cvflann::flann_centers_init_t centers_init = cvflann::FLANN_CENTERS_RANDOM, float cb_index = 0.2f );
 };
 
 struct CV_EXPORTS LshIndexParams : public IndexParams
@@ -134,7 +134,8 @@ public:
     CV_WRAP Index(InputArray features, const IndexParams& params, cvflann::flann_distance_t distType=cvflann::FLANN_DIST_L2);
     virtual ~Index();
 
-    CV_WRAP virtual void build(InputArray features, const IndexParams& params, cvflann::flann_distance_t distType=cvflann::FLANN_DIST_L2);
+    CV_WRAP virtual void build(InputArray wholefeatures, InputArray additionalfeatures, const IndexParams& params, cvflann::flann_distance_t distType=cvflann::FLANN_DIST_L2);
+
     CV_WRAP virtual void knnSearch(InputArray query, OutputArray indices,
                    OutputArray dists, int knn, const SearchParams& params=SearchParams());
 
