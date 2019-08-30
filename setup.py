@@ -70,8 +70,8 @@ if not pthlist:
         pthlist.append(inc)
 
 
-assert pthlist, 'opencv headers not found, you may refer this doc in [] to solve this error.'
-assert cvlibs, 'opencv libs not found, you may refer this doc in [] to solve this error.'
+assert pthlist, 'opencv headers not found, you may refer this doc in [https://github.com/GothicAi/cython-global-matting#environment-settings-linux] to solve this error.'
+assert cvlibs, 'opencv libs not found, you may refer this doc in [https://github.com/GothicAi/cython-global-matting#environment-settings-linux] to solve this error.'
 
 setup(
     name='opencv_mat',
