@@ -26,8 +26,8 @@ If users only use OpenCV (C++ Version) for this package, we highly recommand usi
 
 After installing Conda, users may easily following commands below to install this package. 
 ```
-conda create -n environmnet_name -python=3.x
-conda activate environmnet_name
+conda create -n environment_name -python=3.x
+conda activate environment_name
 conda install -c salilab opencv-nopython        # opencv2
 pip install cython numpy
 pip install opencv-mat
