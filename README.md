@@ -29,6 +29,9 @@ After installing Conda, users may easily following commands below to install thi
 conda create -n environment_name -python=3.x
 conda activate environment_name
 conda install -c salilab opencv-nopython        # opencv2
+conda install -c serge-sans-paille gcc_49       # you need to use conda's gcc instead of system's
+ln -s ~/miniconda3/envs/environment_name/bin/g++-4.9 ~/miniconda3/envs/environment_name/bin/g++   #link to bin
+ln -s ~/miniconda3/envs/environment_name/bin/gcc-4.9 ~/miniconda3/envs/environment_name/bin/gcc   #link to bin
 pip install cython numpy
 pip install opencv-mat
 ```
