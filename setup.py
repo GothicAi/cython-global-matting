@@ -25,6 +25,9 @@ cvlibs = ['-L{}'.format(lib_folder)] + \
 conda_path = os.path.join(sys.prefix, 'include', 'opencv2')
 if os.path.exists(conda_path):
     pthlist.append(conda_path)
+include_path = os.path.join(sys.prefix, 'include')
+if os.path.exists(include_path):
+    pthlist.append(include_path)
 lib_folders = [lib_folder]
 
 if not pthlist:
@@ -73,6 +76,7 @@ if not pthlist:
 assert pthlist, 'opencv headers not found, you may refer this doc in [https://github.com/GothicAi/cython-global-matting#environment-settings-linux] to solve this error.'
 assert cvlibs, 'opencv libs not found, you may refer this doc in [https://github.com/GothicAi/cython-global-matting#environment-settings-linux] to solve this error.'
 
+pthlist.append(numpy.get_include())
 setup(
     name='opencv_mat',
     version='0.1',
@@ -84,9 +88,7 @@ setup(
     ext_modules=cythonize(Extension("opencv_mat",
                                     sources=["opencv_mat.pyx", "globalmatting.cpp", "guidedfilter.cpp"],
                                     language="c++",
-                                    include_dirs=[numpy.get_include(),
-                                                  pthlist[0]
-                                                 ],
+                                    include_dirs=pthlist,
                                     library_dirs=lib_folders,
                                     libraries=cvlibs,
                                     ),
